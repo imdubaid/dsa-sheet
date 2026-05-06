@@ -1,10 +1,13 @@
 export default class CustomError extends Error {
-    statusCode: number;
+    status: number;
 
-    constructor(message: string, statusCode?: number) {
+    constructor(message: string, code?: number) {
         super(message);
         this.name = 'CustomError';
-        this.message = message;
-        this.statusCode = statusCode || 400;
+        this.status = code || 400;
+
+        Object.defineProperty(this, 'message', {
+            enumerable: true,
+        });
     }
 }

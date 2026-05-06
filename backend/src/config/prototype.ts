@@ -3,22 +3,22 @@ import express from 'express';
 express.response.success = function (res: object | string | number) {
     if (typeof res === 'string')
         return this.json({
-            success: true,
             message: res,
+            success: true,
         });
 
     if (typeof res === 'number') return this.status(res).send(); // No Content
 
     return this.json({
-        success: true,
         ...res,
+        success: true,
     });
 };
 
 express.response.error = function (res: object | string) {
-    if (typeof res === 'string' || Array.isArray(res))
+    if (typeof res === 'string')
         return this.json({
-            errors: Array.isArray(res) ? res : [res],
+            message: res,
             success: false,
         });
 

@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const registerDto = z.object({
-    name: z.string().min(1, 'Name is required'),
-    email: z.email('Email is required'),
+    name: z.string().min(1),
+    email: z.email(),
     password: z.string().min(6),
 });
 

@@ -2,9 +2,9 @@ import mongoose, { connect, disconnect } from 'mongoose';
 
 mongoose.set('runValidators', true);
 
-async function connectDB() {
+async function connectDB(name: string) {
     try {
-        const connectionString = process.env.MONGODB_CONNECTION_STRING;
+        const connectionString = process.env.MONGODB_CONNECTION_STRING + `${name}?retryWrites=true&w=majority`;
 
         if (!connectionString) return console.log('Connection Failed: Connection string must be provided');
 

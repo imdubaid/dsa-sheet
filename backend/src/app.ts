@@ -23,11 +23,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use('/public', express.static('public'));
 
-app.use('/api/auth', authorize, auth);
+app.use('/auth', authorize, auth);
 
 app.use(authenticate);
 
-app.use('/api/user', user);
+app.use('/user', user);
 
 app.use(errorHandler);
 

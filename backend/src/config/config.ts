@@ -1,5 +1,6 @@
-import '@/config/env.js';
-import '@/config/database.js';
-import { connectDB } from '@/config/database.js';
+import '@/config/env';
+import '@/config/database';
+import '@/config/prototype';
+import { connectDB } from '@/config/database';
 
-connectDB();
+connectDB('lms');
