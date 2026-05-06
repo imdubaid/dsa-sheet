@@ -1,6 +1,6 @@
-import User, { UserDocument } from '@/schema/user.schema';
+import User, { IUser } from '@/schema/user.schema';
 
-export async function createUser(data: UserDocument) {
+export async function createUser(data: IUser) {
     const newUser = new User({
         name: data.name,
         email: data.email,
@@ -12,6 +12,6 @@ export async function createUser(data: UserDocument) {
     return user;
 }
 
-export async function fetchUser(email: UserDocument['email']) {
+export async function fetchUser(email: IUser['email']) {
     return await User.findOne({ email });
 }

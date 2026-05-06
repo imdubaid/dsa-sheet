@@ -1,9 +1,9 @@
 import CustomError from '@/lib/custom-error';
-import { UserDocument } from '@/schema/user.schema';
+import { IUser } from '@/schema/user.schema';
 import { fetchUser } from '@/services/user.service';
 import { signToken } from '@/utils/helper';
 
-export async function authenticate(data: UserDocument) {
+export async function authenticate(data: IUser) {
     const { email, password } = data;
     const user = await fetchUser(email);
 

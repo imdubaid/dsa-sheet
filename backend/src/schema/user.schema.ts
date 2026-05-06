@@ -1,24 +1,18 @@
-import { Document, model, Schema } from 'mongoose';
+import { Document, Model, model, Schema } from 'mongoose';
 import { compareSync, hashSync } from 'bcrypt';
 import validator from 'validator';
 
-interface Methods {
-    isAuthorized(password: string): Promise<boolean>;
-    hash(password: string): string;
-    removeSensitiveInfo(): object;
-    signAccessToken(): string;
-    signRefreshToken(): string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-export interface UserDocument extends Document, Methods {
+export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
+
+    isAuthorized(password: string): Promise<boolean>;
+    hash(password: string): Promise<string>;
+    removeSensitiveInfo(): Partial<IUser>;
 }
 
-const userSchema = new Schema(
+const userSchema = new Schema<IUser>(
     {
         name: {
             type: String,
@@ -27,6 +21,7 @@ const userSchema = new Schema(
             maxlength: 40,
             required: true,
         },
+
         email: {
             type: String,
             required: true,
@@ -38,35 +33,39 @@ const userSchema = new Schema(
                 message: 'Please provide a valid email address',
             },
         },
+
         password: {
             type: String,
             minlength: 6,
             required: true,
         },
     },
-    { timestamps: true, toJSON: { virtuals: true } },
+    {
+        timestamps: true,
+        toJSON: { virtuals: true },
+    },
 );
 
-userSchema.pre('save', async function (this: UserDocument) {
+userSchema.pre('save', async function () {
     if (this.isModified('password')) {
         this.password = await this.hash(this.password);
     }
 });
 
-userSchema.methods = {
-    isAuthorized: async function (password: string) {
-        return Boolean(compareSync(password, this.password));
-    },
-
-    hash: async function (password: string) {
-        return hashSync(password, 10);
-    },
-
-    removeSensitiveInfo: function () {
-        var obj = this.toObject();
-        obj.password = undefined;
-        return obj;
-    },
+userSchema.methods.isAuthorized = async function (password: string): Promise<boolean> {
+    return compareSync(password, this.password);
 };
 
-export default model<UserDocument>('User', userSchema);
+userSchema.methods.hash = async function (password: string): Promise<string> {
+    return hashSync(password, 10);
+};
+
+userSchema.methods.removeSensitiveInfo = function () {
+    const obj = this.toObject();
+    delete obj.password;
+    return obj;
+};
+
+const User: Model<IUser> = model<IUser>('User', userSchema);
+
+export default User;

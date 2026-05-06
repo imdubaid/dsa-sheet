@@ -10,7 +10,7 @@ express.response.success = function (res: object | string | number) {
     if (typeof res === 'number') return this.status(res).send(); // No Content
 
     return this.json({
-        ...res,
+        data: res,
         success: true,
     });
 };

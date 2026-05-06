@@ -5,9 +5,13 @@ import { Types } from 'mongoose';
 
 const authenticate: Handler = function authenticate(req, res, next) {
     try {
-        const token = req.headers.accessToken;
+        const authorization = req.headers.authorization;
 
-        if (typeof token !== 'string') throw new CustomError('Provided Auth token is invalid');
+        if (!authorization) throw new CustomError('Session token must be provided', 400);
+
+        const token = authorization.split(' ')[1];
+
+        if (typeof token !== 'string') throw new CustomError('Provided Auth token is invalid', 400);
 
         if (!token) throw new CustomError('JWT must be provided', 401);
 
