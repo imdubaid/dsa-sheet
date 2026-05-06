@@ -1,9 +1,11 @@
 import express from 'express';
-import { userInfo } from '@/controller/user.controller';
+import { updateProgress } from '@/controller/user.controller';
+import { validate } from '@/middleware/validate';
+import { updateUserProgressDto } from '@/dto/user.dto';
 
 const user = express.Router();
 
 // POST
-user.post('/info', userInfo);
+user.post('/progress', validate(updateUserProgressDto, ['body']), updateProgress);
 
 export default user;

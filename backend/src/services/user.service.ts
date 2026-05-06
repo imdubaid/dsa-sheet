@@ -1,4 +1,5 @@
-import User, { IUser } from '@/schema/user.schema';
+import UserProgress, { IUserProgress } from '@/schema/userProgress';
+import User, { IUser } from '@/schema/user';
 
 export async function createUser(data: IUser) {
     const newUser = new User({
@@ -14,4 +15,22 @@ export async function createUser(data: IUser) {
 
 export async function fetchUser(email: IUser['email']) {
     return await User.findOne({ email });
+}
+
+export async function updateUserProgress(payload: IUserProgress) {
+    await UserProgress.findOneAndUpdate(
+        {
+            user: payload.user,
+            sheet: payload.sheet,
+        },
+        {
+            status: payload.status,
+            completedAt: new Date(),
+            lastAttemptedAt: new Date(),
+        },
+        {
+            upsert: true,
+            new: true,
+        },
+    );
 }

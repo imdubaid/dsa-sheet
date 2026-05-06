@@ -1,4 +1,4 @@
-import { IUser } from '@/schema/user.schema';
+import { IUser } from '@/schema/user';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
 

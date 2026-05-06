@@ -103,6 +103,12 @@ const sheetSchema = new Schema<ISheet>({
     },
 });
 
+sheetSchema.index({
+    name: 1,
+    topicIndex: 1,
+    problemNumber: 1,
+});
+
 const Sheet: Model<ISheet> = model<ISheet>('Sheet', sheetSchema);
 
 export default Sheet;

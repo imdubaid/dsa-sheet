@@ -1,5 +1,5 @@
 import CustomError from '@/lib/custom-error';
-import { IUser } from '@/schema/user.schema';
+import { IUser } from '@/schema/user';
 import { fetchUser } from '@/services/user.service';
 import { signToken } from '@/utils/helper';
 

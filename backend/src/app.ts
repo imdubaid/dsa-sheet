@@ -24,11 +24,11 @@ app.use(morgan('dev'));
 app.use('/public', express.static('public'));
 
 app.use('/auth', auth);
+app.use('/sheet', sheet);
 
 app.use(authenticate);
 
 app.use('/user', user);
-app.use('/sheet', sheet);
 
 app.use(errorHandler);
 
