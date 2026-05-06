@@ -1,5 +1,5 @@
 import { NextFunction } from 'express';
-import { JwtUser } from '../../src/models/User.ts';
+import { JwtUser } from '../../src/models/User.js';
 import { Types } from 'mongoose';
 
 declare global {
