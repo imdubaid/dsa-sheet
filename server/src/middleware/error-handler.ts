@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import CustomError from '@/lib/custom-error';
 import { ZodError } from 'zod';
+import { textTransform } from '@/utils/helper';
 
 export default function (err: any, req: Request, res: Response, next: NextFunction) {
     console.log('Handling Error...');
