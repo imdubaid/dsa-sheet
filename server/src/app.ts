@@ -10,7 +10,7 @@ import user from '@/routes/user.route';
 import problem from './routes/problem.route';
 
 const app = express();
-const allowedOrigins = (process.env.CORS_ORIGIN ?? 'http://localhost:3000,http://localhost:3010')
+const allowedOrigins = 'http://148.113.43.203:3010,http://localhost:3010,http://localhost:3000'
     .split(',')
     .map(origin => origin.trim())
     .filter(Boolean);
@@ -18,7 +18,6 @@ const allowedOrigins = (process.env.CORS_ORIGIN ?? 'http://localhost:3000,http:/
 app.use(
     cors({
         origin: allowedOrigins,
-        credentials: true,
     }),
 );
 
