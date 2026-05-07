@@ -2,7 +2,7 @@ import { getApiClient } from '@/lib/apiClient';
 import errorHandler from '@/utils/errors/main';
 
 type Response = {
-    data: Record<string, unknown> | null;
+    data: unknown;
     error: string | null;
 };
 
@@ -34,7 +34,7 @@ export async function createAccount(name: string, email: string, password: strin
         await apiClient.post('/auth/register', { name, email, password });
 
         return {
-            data: null,
+            data: true,
             error: null,
         };
     } catch (error) {

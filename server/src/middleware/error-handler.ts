@@ -11,6 +11,8 @@ export default function (err: any, req: Request, res: Response, next: NextFuncti
 
     if (err instanceof ZodError) return zodError(err, res);
 
+    if (err.name === 'MongoServerError') return mongoError(err, res);
+
     if (err instanceof Error) return res.status(400).error(err);
 
     return error500(res);
@@ -31,4 +33,11 @@ function zodError(err: ZodError, res: Response) {
         field: issue.path.join('.'),
         message: issue.message,
     });
+}
+
+function mongoError(err: any, res: Response) {
+    console.log('MongoServerError');
+    let message = 'Duplicate entry for ';
+    message += Object.values(err.keyValue).pop();
+    return res.status(409).error(message);
 }
