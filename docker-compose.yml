@@ -1,0 +1,49 @@
+services:
+    api:
+        container_name: dsa-sheet-api
+        build:
+            context: .
+            dockerfile: server/Dockerfile
+        restart: unless-stopped
+        init: true
+        env_file:
+            - server/.env
+        ports:
+            - '8010:8010'
+
+        healthcheck:
+            test:
+                [
+                    'CMD',
+                    'node',
+                    '-e',
+                    "const net=require('net');const p=process.env.PORT||8010;const s=net.connect(p,'127.0.0.1',()=>{s.end();process.exit(0)});s.on('error',()=>process.exit(1));",
+                ]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
+        logging:
+            driver: json-file
+            options:
+                max-size: '10m'
+                max-file: '3'
+
+    web:
+        container_name: dsa-sheet-web
+        build:
+            context: .
+            dockerfile: web/Dockerfile
+            args:
+                NEXT_PUBLIC_SERVER_URL: http://localhost:8010
+        restart: unless-stopped
+        depends_on:
+            api:
+                condition: service_healthy
+        environment:
+            NODE_ENV: production
+            PORT: 3010
+            SERVER_INTERNAL_URL: http://api:8010
+            NEXT_PUBLIC_SERVER_URL: http://localhost:8010
+        ports:
+            - '3010:3010'

@@ -2,8 +2,9 @@ import { getApiClient } from '@/lib/apiClient';
 import errorHandler from '@/utils/errors/main';
 
 type Response = {
-    data: unknown;
-    error: string | null;
+    data: Record<string, unknown>;
+    error: boolean;
+    message: string;
 };
 
 export async function signIn(email: string, password: string): Promise<Response> {
@@ -17,13 +18,15 @@ export async function signIn(email: string, password: string): Promise<Response>
 
         return {
             data: response.data.data,
-            error: null,
+            error: false,
+            message: 'Login successful',
         };
     } catch (error) {
         console.error(error);
         return {
-            data: null,
-            error: errorHandler.handle(error),
+            data: {},
+            error: true,
+            message: errorHandler.handle(error),
         };
     }
 }
@@ -34,14 +37,16 @@ export async function createAccount(name: string, email: string, password: strin
         await apiClient.post('/auth/register', { name, email, password });
 
         return {
-            data: true,
-            error: null,
+            data: {},
+            error: false,
+            message: 'Account created successfully! Please sign in to continue.',
         };
     } catch (error) {
         console.error(error);
         return {
-            data: null,
-            error: errorHandler.handle(error),
+            data: {},
+            error: true,
+            message: errorHandler.handle(error),
         };
     }
 }

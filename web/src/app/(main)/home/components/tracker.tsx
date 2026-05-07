@@ -2,7 +2,7 @@
 
 import { DIFFICULTY_COLORS } from '@/constants/colors';
 import { Problem } from '@/types/types';
-import { CircularProgress, LinearProgress, Stack, Typography, Box } from '@mui/material';
+import { CircularProgress, Stack, Typography, Box } from '@mui/material';
 import { useMemo } from 'react';
 
 type TrackerProps = {

@@ -1,6 +1,9 @@
 import axios from 'axios';
 
 export async function getApiClient(sessionCookie?: string) {
+    const baseURL =
+        typeof window === 'undefined' ? (process.env.SERVER_INTERNAL_URL ?? process.env.NEXT_PUBLIC_SERVER_URL) : process.env.NEXT_PUBLIC_SERVER_URL;
+
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
     };
@@ -10,7 +13,7 @@ export async function getApiClient(sessionCookie?: string) {
     }
 
     return axios.create({
-        baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
+        baseURL,
         headers,
     });
 }

@@ -3,7 +3,7 @@ import { isSessionExpired } from '@/utils/helper';
 import { jwtDecode } from 'jwt-decode';
 import { cookies } from 'next/headers';
 
-const TOKEN_KEY = process.env.NEXT_PUBLIC_TOKEN_KEY!;
+const TOKEN_KEY = 'token';
 
 export async function getSessionCookie(): Promise<string | null> {
     const cookieStore = await cookies();

@@ -6,7 +6,7 @@ export async function getProblem(sheetName: string) {
     const session = await getSession(sessionCookie);
     if (!session || !sessionCookie) return [];
 
-    const apiClient = await getApiClient(sessionCookie as string);
+    const apiClient = await getApiClient(sessionCookie);
 
     try {
         const response = await apiClient.get('/problem', { params: { name: sheetName, user: session.id } });

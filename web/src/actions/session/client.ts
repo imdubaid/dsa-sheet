@@ -5,7 +5,7 @@ import { isSessionExpired } from '@/utils/helper';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
 import { jwtDecode } from 'jwt-decode';
 
-const TOKEN_KEY = process.env.NEXT_PUBLIC_TOKEN_KEY!;
+const TOKEN_KEY = 'token';
 
 export const getSessionCookie = () => {
     const cookieValue = getCookie(TOKEN_KEY);

@@ -23,11 +23,11 @@ export default function LoginPage() {
     };
 
     const onSubmit = async () => {
-        const { data, error } = await signIn(formData.email, formData.password);
-        if (error || !data) return toast.error(error);
+        const { data, error, message } = await signIn(formData.email, formData.password);
+        if (error) return toast.error(message);
 
         setToken(data.token as string);
-        toast.success('Login successful');
+        toast.success(message);
         router.push(routes.home);
     };
 

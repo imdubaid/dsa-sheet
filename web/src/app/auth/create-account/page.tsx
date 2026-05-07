@@ -22,10 +22,10 @@ const Register = () => {
     };
 
     const onSubmit = async () => {
-        const { data, error } = await createAccount(formData.name, formData.email, formData.password);
-        if (error || !data) return toast.error(error);
+        const { error, message } = await createAccount(formData.name, formData.email, formData.password);
+        if (error) return toast.error(message);
 
-        toast.success('Account created successfully, please sign in to continue');
+        toast.success(message);
         router.push(authRoutes.signIn);
     };
 

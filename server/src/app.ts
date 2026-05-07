@@ -10,10 +10,14 @@ import user from '@/routes/user.route';
 import problem from './routes/problem.route';
 
 const app = express();
+const allowedOrigins = (process.env.CORS_ORIGIN ?? 'http://localhost:3000,http://localhost:3010')
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(Boolean);
 
 app.use(
     cors({
-        origin: ['http://localhost:3000'],
+        origin: allowedOrigins,
         credentials: true,
     }),
 );

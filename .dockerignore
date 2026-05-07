@@ -1,0 +1,48 @@
+# Dependencies
+**/node_modules
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# Build outputs
+**/.next
+**/build
+**/dist
+**/out
+**/coverage
+**/.nyc_output
+**/.cache
+
+# Version control and editor state
+.git
+.gitignore
+.cursor
+.vscode
+.vs
+.idea
+**/*.swp
+**/*~
+
+# Local secrets
+**/.env
+**/.env.*
+!**/.env.example
+
+# Docker metadata
+**/Dockerfile*
+**/docker-compose*.yml
+**/docker-compose*.yaml
+**/compose*.yml
+**/compose*.yaml
+**/.dockerignore
+
+# OS files
+**/.DS_Store
+**/Thumbs.db
+
+# Generated clients and transient Cursor data
+web/src/generated
+server/terminals
+server/agent-transcripts
+server/mcps
