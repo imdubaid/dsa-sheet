@@ -1,10 +1,47 @@
-import { decodeToken, TOKEN_KEY } from '@/utils/token';
-import { cookies } from 'next/headers';
+import { getApiClient } from '@/lib/apiClient';
+import errorHandler from '@/utils/errors/main';
 
-export async function getSession() {
-    const cookieStore = await cookies();
-    const token = cookieStore.get(TOKEN_KEY);
-    if (!token?.value) return null;
+type Response = {
+    data: Record<string, unknown> | null;
+    error: string | null;
+};
 
-    return decodeToken(token.value);
+export async function signIn(email: string, password: string): Promise<Response> {
+    const apiClient = await getApiClient();
+
+    try {
+        const response = await apiClient.post('/auth/login', {
+            email,
+            password,
+        });
+
+        return {
+            data: response.data.data,
+            error: null,
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            data: null,
+            error: errorHandler.handle(error),
+        };
+    }
+}
+
+export async function createAccount(name: string, email: string, password: string): Promise<Response> {
+    const apiClient = await getApiClient();
+    try {
+        await apiClient.post('/auth/register', { name, email, password });
+
+        return {
+            data: null,
+            error: null,
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            data: null,
+            error: errorHandler.handle(error),
+        };
+    }
 }

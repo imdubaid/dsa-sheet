@@ -6,6 +6,7 @@ import { FiArrowRight, FiCheckCircle, FiVideo, FiTrendingUp, FiZap } from 'react
 import { useRouter } from 'next/navigation';
 import { authRoutes, routes } from '@/routes';
 import useAuth from '@/hooks/useAuth';
+import Image from '@/components/ui/image';
 
 const features = [
     {
@@ -54,7 +55,7 @@ function Page() {
 
     return (
         <Box>
-            <Grid container spacing={10} sx={{ py: 2, alignItems: 'center' }} mb={20}>
+            <Grid container spacing={10} sx={{ py: 2, alignItems: 'center' }} mt={7} mb={20}>
                 <Grid size={{ xs: 12, md: 6 }}>
                     <Chip
                         label='15,41,934+ Learners'
@@ -100,21 +101,7 @@ function Page() {
                     </Stack>
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
-                    <Box
-                        sx={{
-                            position: 'relative',
-                            height: 400,
-                            background: 'radial-gradient(circle at 20% 20%, #f8f8f8 0%, #f2f2f2 60%, #eeeeee 100%)',
-                            borderRadius: '20px',
-                            border: '1px solid #e8e8e8',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}>
-                        <Typography variant='h3' sx={{ color: 'rgba(17, 17, 17, 0.35)' }}>
-                            🚀 Dashboard Preview
-                        </Typography>
-                    </Box>
+                    <Image name='hero.png' alt='hero' sx={{ width: '100%', height: '100%' }} />
                 </Grid>
             </Grid>
 

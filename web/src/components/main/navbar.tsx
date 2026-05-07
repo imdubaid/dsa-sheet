@@ -3,8 +3,6 @@
 import { Fragment } from 'react';
 import Link from 'next/link';
 import { AppBar, Toolbar, Stack, Typography, Paper, styled, Button } from '@mui/material';
-import { routes } from './navList';
-import NavLink from '../lib/nav-link';
 import { authRoutes, DEFAULT_ROUTE } from '@/routes';
 import useAuth from '@/hooks/useAuth';
 
@@ -47,9 +45,7 @@ function Navbar() {
                             },
                         }}>
                         <Stack width='100%' direction='row' alignItems='center'>
-                            <Link
-                                href={DEFAULT_ROUTE}
-                                style={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'flex-start', minWidth: 0 }}>
+                            <Link href={DEFAULT_ROUTE} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', minWidth: 0 }}>
                                 <Typography variant='h6' fontSize={24} fontWeight={600}>
                                     DSA Sheet
                                 </Typography>
@@ -83,11 +79,16 @@ function Navbar() {
 
                             <Stack direction='row' spacing={1.5} flex={1} justifyContent='flex-end' alignItems='center' minWidth={0}>
                                 {session ? (
-                                    <Button variant='outlined' shape='rounded' onClick={() => logout(DEFAULT_ROUTE)} sx={{ px: 3 }}>
+                                    <Button variant='outlined' shape='rounded' onClick={() => logout(DEFAULT_ROUTE)} sx={{ px: 3, fontWeight: 500 }}>
                                         Sign out
                                     </Button>
                                 ) : (
-                                    <Button variant='contained' shape='rounded' LinkComponent={Link} href={authRoutes.signIn} sx={{ px: 3 }}>
+                                    <Button
+                                        variant='contained'
+                                        shape='rounded'
+                                        LinkComponent={Link}
+                                        href={authRoutes.signIn}
+                                        sx={{ px: 3, fontWeight: 500 }}>
                                         Get started
                                     </Button>
                                 )}

@@ -1,17 +1,11 @@
+'use client';
+
 import { SessionUser } from '@/types/types';
+import { isSessionExpired } from '@/utils/helper';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
 import { jwtDecode } from 'jwt-decode';
 
-export const TOKEN_KEY = 'token';
-
-export function decodeJWT(jwt: string | undefined): SessionUser | null {
-    if (!jwt) return null;
-    try {
-        return jwtDecode(jwt) as SessionUser;
-    } catch {
-        return null;
-    }
-}
+const TOKEN_KEY = process.env.NEXT_PUBLIC_TOKEN_KEY!;
 
 export const getSessionCookie = () => {
     const cookieValue = getCookie(TOKEN_KEY);
@@ -31,13 +25,10 @@ export const clearSessionCookie = () => {
     deleteCookie(TOKEN_KEY, { path: '/' });
 };
 
-export const isSessionExpired = (payload: SessionUser | null) => {
-    if (!payload?.exp) return true;
-    return payload.exp * 1000 <= Date.now();
-};
+export const getSession = (cookie: string | null): SessionUser | null => {
+    if (!cookie) return null;
 
-export const getSession = () => {
-    const token = getSessionCookie();
-    if (!token) return null;
-    return decodeJWT(token);
+    const decoded = jwtDecode(cookie) as SessionUser;
+    if (!decoded || isSessionExpired(decoded)) return null;
+    return decoded;
 };

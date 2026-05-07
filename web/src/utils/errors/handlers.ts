@@ -21,7 +21,7 @@ export class AxiosErrorHandler implements ErrorHandler {
         const err = error as AxiosError;
 
         // Prefer backend message
-        const serverMessage = extractErrorMessage(err.response?.data);
+        const serverMessage = extractErrorMessage(err.response?.data, 'message');
         if (serverMessage) return serverMessage;
 
         // Fallback to native axios message

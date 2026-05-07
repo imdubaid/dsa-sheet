@@ -153,7 +153,7 @@ export const components: Components<Theme> = {
                 '&:hover': {
                     backgroundColor:
                         ownerState.variant === 'contained'
-                            ? '#000000'
+                            ? theme.palette.primary.main
                             : ['text', 'outlined'].includes(ownerState.variant ?? '')
                               ? 'transparent'
                               : ownerState.color === 'secondary'
@@ -163,12 +163,6 @@ export const components: Components<Theme> = {
                         ? alpha(theme.palette.primary.main, 0.35)
                         : theme.palette.primary.main,
                 },
-                ...(ownerState.variant === 'contained'
-                    ? {
-                          backgroundColor: '#111111',
-                          color: '#ffffff',
-                      }
-                    : {}),
                 ...(ownerState.variant === 'outlined'
                     ? {
                           borderColor: theme.palette.divider,

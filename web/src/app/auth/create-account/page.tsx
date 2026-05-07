@@ -3,9 +3,31 @@
 import { Typography, Stack, TextField, Button, Link as MuiLink, Divider } from '@mui/material';
 import Link from 'next/link';
 import Form from '@/components/lib/form';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { authRoutes } from '@/routes';
+import { createAccount } from '@/actions/auth';
 
 const Register = () => {
-    const onSubmit = async () => {};
+    const router = useRouter();
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const onSubmit = async () => {
+        const { data, error } = await createAccount(formData.name, formData.email, formData.password);
+        if (error || !data) return toast.error(error);
+
+        toast.success('Account created successfully, please sign in to continue');
+        router.push(authRoutes.signIn);
+    };
 
     return (
         <Stack gap={4}>
@@ -25,13 +47,13 @@ const Register = () => {
                     <Typography variant='body2' fontSize={14} color='text.secondary'>
                         Name
                     </Typography>
-                    <TextField size='small' fullWidth placeholder='John Doe' variant='outlined' required />
+                    <TextField size='small' fullWidth placeholder='John Doe' variant='outlined' name='name' onChange={handleChange} required />
                 </Stack>
                 <Stack gap={1} mb={3}>
                     <Typography variant='body2' fontSize={14} color='text.secondary'>
                         Email
                     </Typography>
-                    <TextField size='small' fullWidth placeholder='john@email.com' variant='outlined' required />
+                    <TextField size='small' fullWidth placeholder='john@doe.com' variant='outlined' name='email' onChange={handleChange} required />
                 </Stack>
 
                 <Stack gap={1} mb={3}>
@@ -43,6 +65,9 @@ const Register = () => {
                         fullWidth
                         placeholder='&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;'
                         variant='outlined'
+                        name='password'
+                        type='password'
+                        onChange={handleChange}
                         required
                     />
                 </Stack>

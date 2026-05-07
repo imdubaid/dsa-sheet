@@ -1,19 +1,16 @@
-import { getStoredToken } from '@/utils/token';
 import axios from 'axios';
 
-export async function getApiClient() {
+export async function getApiClient(sessionCookie?: string) {
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
     };
 
-    const token = getStoredToken();
-
-    if (token && token.trim()) {
-        headers.authorization = `Bearer ${token}`;
+    if (sessionCookie) {
+        headers.authorization = `Bearer ${sessionCookie}`;
     }
 
     return axios.create({
-        baseURL: process.env.NEXT_PUBLIC_API_URL,
+        baseURL: process.env.NEXT_PUBLIC_SERVER_URL!,
         headers,
     });
 }

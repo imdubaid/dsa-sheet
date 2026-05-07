@@ -3,13 +3,12 @@
 import { Typography, Stack, TextField, Button, Link as MuiLink, Divider } from '@mui/material';
 import Link from 'next/link';
 import Form from '@/components/lib/form';
-import { getApiClient } from '@/lib/apiClient';
 import useAuth from '@/hooks/useAuth';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import errorHandler from '@/utils/errors/main';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/routes';
+import { signIn } from '@/actions/auth';
 
 export default function LoginPage() {
     const { setToken } = useAuth();
@@ -24,23 +23,12 @@ export default function LoginPage() {
     };
 
     const onSubmit = async () => {
-        const apiClient = await getApiClient();
+        const { data, error } = await signIn(formData.email, formData.password);
+        if (error || !data) return toast.error(error);
 
-        try {
-            const response = await apiClient.post('/auth/login', {
-                email: formData.email,
-                password: formData.password,
-            });
-
-            const data = response.data.data;
-
-            setToken(data.token);
-            toast.success('Login successful');
-            router.push(routes.home);
-        } catch (error) {
-            console.error(error);
-            toast.error(errorHandler.handle(error));
-        }
+        setToken(data.token as string);
+        toast.success('Login successful');
+        router.push(routes.home);
     };
 
     return (
@@ -60,7 +48,7 @@ export default function LoginPage() {
                     <Typography variant='body2' fontSize={14} color='text.secondary'>
                         Email
                     </Typography>
-                    <TextField size='small' fullWidth placeholder='john@email.com' variant='outlined' required name='email' onChange={handleChange} />
+                    <TextField size='small' fullWidth placeholder='john@doe.com' variant='outlined' required name='email' onChange={handleChange} />
                 </Stack>
 
                 <Stack gap={1} mb={3}>
@@ -74,6 +62,7 @@ export default function LoginPage() {
                         variant='outlined'
                         required
                         name='password'
+                        type='password'
                         onChange={handleChange}
                     />
                 </Stack>

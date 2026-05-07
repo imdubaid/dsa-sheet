@@ -2,15 +2,15 @@
 
 import { authRoutes } from '@/routes';
 import { SessionUser } from '@/types/types';
-import { clearStoredToken, decodeToken, getStoredToken, isTokenExpired, setStoredToken } from '@/utils/token';
+import { clearSessionCookie, getSessionCookie, getSession, setSessionCookie } from '@/actions/session/client';
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { isSessionExpired } from '@/utils/helper';
 
 type UseAuthResult = {
     session: SessionUser | null;
-    token: string | null;
     isAuthenticated: boolean;
     isLoading: boolean;
-    validateToken: (token?: string | null) => SessionUser | null;
     refreshSession: () => void;
     setToken: (token: string) => void;
     logout: (redirectTo?: string) => void;
@@ -33,10 +33,10 @@ function emitAuthStoreChange() {
 
 /** Valid JWT from the cookie, or null. Used as the client snapshot for useSyncExternalStore. */
 function getClientTokenSnapshot(): string | null {
-    const raw = getStoredToken();
+    const raw = getSessionCookie();
     if (!raw) return null;
-    const decoded = decodeToken(raw);
-    if (!decoded || isTokenExpired(decoded)) return null;
+    const decoded = jwtDecode(raw);
+    if (!decoded || isSessionExpired(decoded)) return null;
     return raw;
 }
 
@@ -45,33 +45,26 @@ function getServerTokenSnapshot(): string | null {
 }
 
 function useAuth(): UseAuthResult {
-    const validateToken = useCallback((rawToken?: string | null) => {
-        const decoded = decodeToken(rawToken ?? undefined);
-        if (!decoded) return null;
-        if (isTokenExpired(decoded)) return null;
-        return decoded;
-    }, []);
-
     const token = useSyncExternalStore(subscribeAuthStore, getClientTokenSnapshot, getServerTokenSnapshot);
-    const session = useMemo(() => validateToken(token), [token, validateToken]);
+    const session = useMemo(() => getSession(token), [token]);
 
     const clearAuth = useCallback(() => {
-        clearStoredToken();
+        clearSessionCookie();
         emitAuthStoreChange();
     }, []);
 
     const hydrateFromStorage = useCallback(() => {
-        const storedToken = getStoredToken();
-        const validSession = validateToken(storedToken);
+        const storedToken = getSessionCookie();
+        const validSession = getSession(storedToken);
 
         if (!storedToken || !validSession) {
             clearAuth();
             return;
         }
 
-        setStoredToken(storedToken);
+        setSessionCookie(storedToken);
         emitAuthStoreChange();
-    }, [clearAuth, validateToken]);
+    }, [clearAuth]);
 
     const refreshSession = useCallback(() => {
         hydrateFromStorage();
@@ -79,16 +72,16 @@ function useAuth(): UseAuthResult {
 
     const setToken = useCallback(
         (nextToken: string) => {
-            const validSession = validateToken(nextToken);
+            const validSession = getSession(nextToken);
             if (!validSession) {
                 clearAuth();
                 return;
             }
 
-            setStoredToken(nextToken);
+            setSessionCookie(nextToken);
             emitAuthStoreChange();
         },
-        [clearAuth, validateToken],
+        [clearAuth],
     );
 
     const logout = useCallback(
@@ -103,10 +96,8 @@ function useAuth(): UseAuthResult {
 
     return {
         session,
-        token,
         isAuthenticated,
         isLoading: false,
-        validateToken,
         refreshSession,
         setToken,
         logout,

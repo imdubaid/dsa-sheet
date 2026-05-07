@@ -1,5 +1,5 @@
 import { JwtPayload } from 'jwt-decode';
-import { difficulty } from './constants';
+import { difficulty, TransformOptions } from './constants';
 
 export type SessionUser = JwtPayload & {
     id: string;

@@ -9,6 +9,8 @@ import {
     Checkbox,
     Chip,
     IconButton,
+    LinearProgress,
+    Stack,
     Table,
     TableBody,
     TableCell,
@@ -17,9 +19,10 @@ import {
     Typography,
 } from '@mui/material';
 import Link from 'next/link';
-import { memo, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { DIFFICULTY_COLORS } from '@/constants/colors';
+import { updateUserProgress } from '@/api/user/client';
 
 type ProblemStackProps = Sheet & {
     completed: Record<string, boolean>;
@@ -31,9 +34,14 @@ function ProblemStack(props: ProblemStackProps) {
     const [expandedSection, setExpandedSection] = useState<string>('');
 
     const totalProblems = problems.length;
-    const completedCount = useMemo(
-        () => problems.reduce((n, p) => n + (completed[p._id] ? 1 : 0), 0),
-        [problems, completed],
+    const completedCount = useMemo(() => problems.reduce((n, p) => n + (completed[p._id] ? 1 : 0), 0), [problems, completed]);
+
+    const handleToggleProblem = useCallback(
+        async (problemId: string) => {
+            toggleProblem(problemId);
+            await updateUserProgress(problemId, completed[problemId] ? 'pending' : 'completed');
+        },
+        [completed, toggleProblem],
     );
 
     return (
@@ -59,9 +67,21 @@ function ProblemStack(props: ProblemStackProps) {
                     },
                 }}>
                 <Typography fontWeight={700}>{_id}</Typography>
-                <Typography color='text.secondary' fontSize={14}>
-                    {completedCount} / {totalProblems}
-                </Typography>
+
+                <Stack direction='row' alignItems='center' columnGap={2}>
+                    <LinearProgress
+                        value={(completedCount / totalProblems) * 100}
+                        variant='determinate'
+                        sx={{
+                            width: 150,
+                            height: 7,
+                            borderRadius: 100,
+                        }}
+                    />
+                    <Typography color='text.secondary' fontSize={14} minWidth={50} textAlign='right'>
+                        {completedCount} / {totalProblems}
+                    </Typography>
+                </Stack>
             </AccordionSummary>
             <AccordionDetails sx={{ p: 0, border: '1px solid', borderColor: 'divider', borderRadius: '12px' }}>
                 <Table size='small'>
@@ -80,7 +100,7 @@ function ProblemStack(props: ProblemStackProps) {
                         {problems.map(problem => (
                             <TableRow key={problem._id} hover sx={{ '& td': { borderColor: 'divider' } }}>
                                 <TableCell>
-                                    <Checkbox checked={Boolean(completed[problem._id])} onChange={() => toggleProblem(problem._id)} />
+                                    <Checkbox checked={Boolean(completed[problem._id])} onChange={() => handleToggleProblem(problem._id)} />
                                 </TableCell>
                                 <TableCell>
                                     <Typography
