@@ -7,7 +7,7 @@ import errorHandler from '@/middleware/error-handler';
 import authenticate from '@/middleware/authenticate';
 import auth from '@/routes/auth.route';
 import user from '@/routes/user.route';
-import sheet from './routes/sheet.route';
+import problem from './routes/problem.route';
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.use(morgan('dev'));
 app.use('/public', express.static('public'));
 
 app.use('/auth', auth);
-app.use('/sheet', sheet);
+app.use('/problem', problem);
 
 app.use(authenticate);
 

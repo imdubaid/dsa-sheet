@@ -1,8 +1,8 @@
-import Sheet from '@/schema/sheet';
+import Problem from '@/schema/problem';
 import { Types } from 'mongoose';
 
-export async function fetchSheet(name: string, userId: Types.ObjectId) {
-    const result = await Sheet.aggregate([
+export async function fetchProblem(name: string, userId: Types.ObjectId) {
+    const result = await Problem.aggregate([
         {
             $match: {
                 name: name,
@@ -21,7 +21,7 @@ export async function fetchSheet(name: string, userId: Types.ObjectId) {
                 from: 'userprogresses',
 
                 let: {
-                    sheetId: '$_id',
+                    problemId: '$_id',
                 },
 
                 pipeline: [
@@ -34,7 +34,7 @@ export async function fetchSheet(name: string, userId: Types.ObjectId) {
                     {
                         $match: {
                             $expr: {
-                                $eq: ['$sheet', '$$sheetId'],
+                                $eq: ['$problem', '$$problemId'],
                             },
                         },
                     },

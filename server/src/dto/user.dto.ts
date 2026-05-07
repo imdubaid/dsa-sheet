@@ -8,6 +8,6 @@ const ObjectId = z.string().refine(val => mongoose.Types.ObjectId.isValid(val), 
 
 export const updateUserProgressDto = z.object({
     user: ObjectId,
-    sheet: ObjectId,
+    problem: ObjectId,
     status: z.enum(problemStatus),
 });

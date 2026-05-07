@@ -21,12 +21,12 @@ export async function updateUserProgress(payload: IUserProgress) {
     await UserProgress.findOneAndUpdate(
         {
             user: payload.user,
-            sheet: payload.sheet,
+            problem: payload.problem,
         },
         {
-            status: payload.status,
-            completedAt: new Date(),
-            lastAttemptedAt: new Date(),
+            $set: {
+                status: payload.status,
+            },
         },
         {
             upsert: true,

@@ -9,7 +9,7 @@ type Links = {
     youtube: string;
 };
 
-export interface ISheet extends Document {
+export interface IProblem extends Document {
     name: string;
     topic: string;
     topicIndex: number;
@@ -20,7 +20,7 @@ export interface ISheet extends Document {
     links: Links;
 }
 
-const sheetSchema = new Schema<ISheet>({
+const problemSchema = new Schema<IProblem>({
     name: {
         type: String,
         required: true,
@@ -103,12 +103,12 @@ const sheetSchema = new Schema<ISheet>({
     },
 });
 
-sheetSchema.index({
+problemSchema.index({
     name: 1,
     topicIndex: 1,
     problemNumber: 1,
 });
 
-const Sheet: Model<ISheet> = model<ISheet>('Sheet', sheetSchema);
+const Problem: Model<IProblem> = model<IProblem>('Problem', problemSchema);
 
-export default Sheet;
+export default Problem;

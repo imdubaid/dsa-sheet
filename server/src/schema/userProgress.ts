@@ -3,13 +3,10 @@ import { Document, Model, model, Schema, Types } from 'mongoose';
 
 export interface IUserProgress extends Document {
     user: Types.ObjectId;
-    sheet: Types.ObjectId;
-
+    problem: Types.ObjectId;
     status: (typeof problemStatus)[number];
     notes?: string;
     revisionCount: number;
-    lastAttemptedAt?: Date;
-    completedAt?: Date;
 }
 
 const userProgressSchema = new Schema<IUserProgress>(
@@ -21,9 +18,9 @@ const userProgressSchema = new Schema<IUserProgress>(
             index: true,
         },
 
-        sheet: {
+        problem: {
             type: Schema.Types.ObjectId,
-            ref: 'Sheet',
+            ref: 'Problem',
             required: true,
         },
 
@@ -42,16 +39,13 @@ const userProgressSchema = new Schema<IUserProgress>(
             type: Number,
             default: 0,
         },
-
-        lastAttemptedAt: Date,
-        completedAt: Date,
     },
     {
         timestamps: true,
     },
 );
 
-userProgressSchema.index({ user: 1, sheet: 1 }, { unique: true });
+userProgressSchema.index({ user: 1, problem: 1 }, { unique: true });
 
 const UserProgress: Model<IUserProgress> = model<IUserProgress>('UserProgress', userProgressSchema);
 

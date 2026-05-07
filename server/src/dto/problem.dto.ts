@@ -5,9 +5,9 @@ const ObjectId = z.string().refine(val => Types.ObjectId.isValid(val), {
     message: 'Invalid Mongo ObjectId',
 });
 
-export const getSheetDto = z.object({
+export const ProblemQueryDto = z.object({
     name: z.string().min(1),
     user: ObjectId,
 });
 
-export type GetSheetType = z.infer<typeof getSheetDto>;
+export type ProblemQueryType = z.infer<typeof ProblemQueryDto>;
